@@ -1,5 +1,6 @@
 import discord
 import random
+from thefuzz import fuzz
 
 
 BOT_USERNAME = "@Gork"
@@ -48,7 +49,7 @@ async def on_message(message):
     if content.startswith(BOT_USERNAME) and len(content) > len(BOT_USERNAME)+1:
         phrase = content[len(BOT_USERNAME):].strip()
         # if the phrase matches any accepted phrase
-        if any(x.lower() == phrase.lower() for x in ACCEPTED_PHRASES):
+        if any(fuzz.ratio(phrase, x) >= 60 for x in ACCEPTED_PHRASES):
             idx = random.randint(0, len(RESPONSES))
             await message.channel.send(RESPONSES[idx])
 
